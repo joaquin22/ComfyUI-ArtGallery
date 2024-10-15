@@ -1,27 +1,36 @@
 import os
 
-#uploadimg
-def modify_js_file(file_path, new_content):	
-    with open(file_path, 'r') as file:
+
+# uploadimg
+def modify_js_file(file_path, new_content):
+    print("current_path->", current_dir)
+    print("file_path->", file_path)
+
+    with open(file_path, "r") as file:
         content = file.read()
 
     # 检查文件中是否已包含需要添加的内容
     if "image_upload_artist" not in content:
         # 找到原始代码的位置
-        insert_position = content.find('nodeData.input.required.upload = ["IMAGEUPLOAD"];')
+        insert_position = content.find(
+            'nodeData.input.required.upload = ["IMAGEUPLOAD"];'
+        )
         if insert_position != -1:
             # 在原始代码后插入新的代码
             insert_position += len('nodeData.input.required.upload = ["IMAGEUPLOAD"];')
-            content = content[:insert_position] + new_content + content[insert_position:]
+            content = (
+                content[:insert_position] + new_content + content[insert_position:]
+            )
 
             # 写回文件
-            with open(file_path, 'w') as file:
+            with open(file_path, "w") as file:
                 file.write(content)
             print(f"File '{file_path}' updated successfully.✅")
         else:
             print("Original code block not found.❌")
     else:
         print("File already contains the necessary modifications.✅")
+
 
 # 要插入的新内容
 new_js_content = """
@@ -50,20 +59,24 @@ new_js_content = """
 
 # 文件路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
-uploadimg_js_file_path = os.path.join(current_dir, '..\\..\\web\\extensions\\core\\uploadImage.js')
+uploadimg_js_file_path = os.path.join(
+    current_dir, "..\\..\\web\\extensions\\core\\uploadImage.js"
+)
 print(uploadimg_js_file_path)
 
 modify_js_file(uploadimg_js_file_path, new_js_content)
 
 
-#folderpath
-def modify_py_file(file_path, new_content, search_line, function_content, search_function):
-    with open(file_path, 'r') as file:
+# folderpath
+def modify_py_file(
+    file_path, new_content, search_line, function_content, search_function
+):
+    with open(file_path, "r") as file:
         lines = file.readlines()
 
     # 准备新内容和函数内容的关键行用于比较
-    new_content_key_line = new_content.strip().split('\n')[0]
-    function_content_key_line = function_content.strip().split('\n')[0]
+    new_content_key_line = new_content.strip().split("\n")[0]
+    function_content_key_line = function_content.strip().split("\n")[0]
 
     # 检查新内容是否已存在
     if new_content_key_line not in "".join(lines):
@@ -83,9 +96,10 @@ def modify_py_file(file_path, new_content, search_line, function_content, search
                 break
 
     # 写回文件
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         file.writelines(lines)
     print(f"File '{file_path}' updated successfully.✅")
+
 
 # 要插入的新内容
 new_py_content = """
@@ -107,7 +121,7 @@ folder_names_and_paths["styles"] = ([styles_dir], supported_artist_extensions)
 """
 
 # 要修改的函数内容
-function_py_content = '''\
+function_py_content = """\
     if type_name == "artists":
         return folder_names_and_paths["artists"][0][0]
     if type_name == "cameras":
@@ -118,44 +132,59 @@ function_py_content = '''\
         return folder_names_and_paths["movements"][0][0]
     if type_name == "styles":
         return folder_names_and_paths["styles"][0][0]
-'''
+"""
 
 
 # 文件路径
 
-py_file_path = os.path.join(current_dir, '..\\..\\folder_paths.py')
+py_file_path = os.path.join(current_dir, "..\\..\\folder_paths.py")
 
-modify_py_file(py_file_path, new_py_content, 'folder_names_and_paths["classifiers"]', function_py_content, 'def get_directory_by_type(type_name):')
+modify_py_file(
+    py_file_path,
+    new_py_content,
+    'folder_names_and_paths["classifiers"]',
+    function_py_content,
+    "def get_directory_by_type(type_name):",
+)
 
 
-#wedget
+# wedget
 def modify_wedgets_js_file(file_path, new_content, new_content_2):
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         content = file.read()
 
     # 检查文件中是否已包含需要添加的内容
     if "ARTISTS_IMAGEUPLOAD" not in content:
         # 找到原始代码的位置
-        insert_position = content.find('return (display==="slider") ? "slider" : "number"')
+        insert_position = content.find(
+            'return (display==="slider") ? "slider" : "number"'
+        )
         if insert_position != -1:
             # 在原始代码后插入新的代码
             insert_position += len('return (display==="slider") ? "slider" : "number"')
-            content = content[:insert_position] + new_content + content[insert_position:]
+            content = (
+                content[:insert_position] + new_content + content[insert_position:]
+            )
 
-        insert_position_2 = content.find('return { widget: uploadWidget };')
+        insert_position_2 = content.find("return { widget: uploadWidget };")
         if insert_position_2 != -1:
             # 在原始代码后插入新的代码
-            insert_position_2 += len('return { widget: uploadWidget };')
-            content = content[:insert_position_2] + new_content_2 + content[insert_position_2:]
+            insert_position_2 += len("return { widget: uploadWidget };")
+            content = (
+                content[:insert_position_2]
+                + new_content_2
+                + content[insert_position_2:]
+            )
 
             # 写回文件
-            with open(file_path, 'w') as file:
+            with open(file_path, "w") as file:
                 file.write(content)
             print(f"File '{file_path}' updated successfully.✅")
         else:
             print("Original code block not found.❌")
     else:
         print("File already contains the necessary modifications.✅")
+
 
 # 要插入的新内容
 new_wedgets_js_content = """
@@ -251,11 +280,13 @@ new_wedgets_js_content_2 = """
 """
 
 # 文件路径
-wedgets_js_file_path = os.path.join(current_dir, '..\\..\\web\\scripts/widgets.js')
+wedgets_js_file_path = os.path.join(current_dir, "..\\..\\web\\scripts/widgets.js")
 
-modify_wedgets_js_file(wedgets_js_file_path, new_wedgets_js_content, new_wedgets_js_content_2)
+modify_wedgets_js_file(
+    wedgets_js_file_path, new_wedgets_js_content, new_wedgets_js_content_2
+)
 
 
 from .ArtGallery import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
 
-__all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
+__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
